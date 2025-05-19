@@ -9,17 +9,25 @@
 ## 2. Initial Setup
 
 1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/yourusername/cqss_new.git
+   ```
+   git clone https://github.com/tonyho5689/cqss_new.git
    cd cqss_new
    ```
 
 2. **Set up the build environment**:
+
+   For Windows:
+   ```cmd
+   setup-build-env.bat
+   ```
+
+   For Unix/Mac:
    ```bash
    chmod +x setup-build-env.sh
    ./setup-build-env.sh
    ```
-   This script creates necessary directories and placeholder files for system dependencies.
+
+   These scripts create necessary directories and placeholder files for system dependencies.
 
 ## 3. Project Structure Understanding
 
@@ -37,7 +45,7 @@ The project consists of 14 modules:
 ### 4.1. Building the Entire Project
 
 To build the entire project at once:
-```bash
+```
 mvn clean install
 ```
 
@@ -52,22 +60,22 @@ This will:
 To build specific modules (similar to the original Ant scripts):
 
 1. **Build Core Modules** (equivalent to BuildCqssCore.bat):
-   ```bash
+   ```
    mvn clean install -pl CqssCommon,CqssStartup
    ```
 
 2. **Build EJB Modules** (equivalent to BuildCqssEjb.bat):
-   ```bash
+   ```
    mvn clean install -pl CqssVo,CqssDB,CqssEjbUtil,CqssIntraEjb
    ```
 
 3. **Build Intranet Modules** (equivalent to BuildCqssIntranet.bat):
-   ```bash
+   ```
    mvn clean install -pl CqssIntranetWeb,CqssIntraEAR
    ```
 
 4. **Build Client Modules** (equivalent to BuildCqssForClient.bat):
-   ```bash
+   ```
    mvn clean install -pl CqssApplet
    ```
 
@@ -100,14 +108,14 @@ Maven will automatically download external dependencies like Apache Commons, Spr
 ### 6.1. EJB Modules
 
 EJB modules are configured to generate client JARs. When building CqssIntraEjb, both the EJB JAR and client JAR will be generated:
-```bash
+```
 mvn clean install -pl CqssIntraEjb
 ```
 
 ### 6.2. Web and EAR Modules
 
 When building web and EAR modules, ensure that their dependencies are built first:
-```bash
+```
 mvn clean install -pl CqssVo,CqssDB,CqssEjbUtil,CqssIntraEjb,CqssIntranetWeb,CqssIntraEAR
 ```
 
@@ -115,7 +123,7 @@ mvn clean install -pl CqssVo,CqssDB,CqssEjbUtil,CqssIntraEjb,CqssIntranetWeb,Cqs
 
 After building, the artifacts will be available in:
 - Each module's `target` directory
-- Your local Maven repository (`~/.m2/repository/com/ocbc/hk/apps/cqss/`)
+- Your local Maven repository (Windows: `C:\Users\{username}\.m2\repository\com\ocbc\hk\apps\cqss\`, Mac/Linux: `~/.m2/repository/com/ocbc/hk/apps/cqss/`)
 
 ## 8. Migrating Additional Modules
 
@@ -164,13 +172,13 @@ If the packaged artifacts don't match the expected structure:
 After successfully migrating and testing:
 
 1. Commit your changes:
-   ```bash
+   ```
    git add .
    git commit -m "Complete Ant to Maven migration"
    ```
 
 2. Push to the repository:
-   ```bash
+   ```
    git push origin main
    ```
 
