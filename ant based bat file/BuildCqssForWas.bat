@@ -1,0 +1,31 @@
+@ECHO OFF
+
+REM - BELOW WILL CHECK THE PARAMETERS INPUT BY USERS.
+:INPUT_VALIDATE
+IF "%1A" == "A" GOTO INVALID_INPUT
+GOTO SETUP_BUILD_LOG_PATH
+
+:INVALID_INPUT
+ECHO.
+ECHO SYNTAX ERROR - SHOULD BE '%0 Transmittal_Ref_No'
+ECHO.
+
+GOTO END
+
+:SETUP_BUILD_LOG_PATH
+SET BUILD_LOG_FILEPATH=.\BuildCqssForWas.log
+
+@if exist %BUILD_LOG_FILEPATH% del %BUILD_LOG_FILEPATH%
+
+@echo Run BuildCqssForWas Starting: %date% %time% >> %BUILD_LOG_FILEPATH% 2>&1
+
+@Call CleanupFolder.bat >> %BUILD_LOG_FILEPATH% 2>&1
+@Call SetupEnv.bat >> %BUILD_LOG_FILEPATH% 2>&1
+@Call BuildCqssCore.bat SKIP >> %BUILD_LOG_FILEPATH% 2>&1
+@Call BuildCqssEjb.bat SKIP >> %BUILD_LOG_FILEPATH% 2>&1
+@Call BuildCqssIntranet.bat SKIP >> %BUILD_LOG_FILEPATH% 2>&1
+
+@echo Run BuildCqssForWas Ending: %date% %time% >> %BUILD_LOG_FILEPATH% 2>&1
+
+:END
+ECHO --- PLEASE CHECK ---

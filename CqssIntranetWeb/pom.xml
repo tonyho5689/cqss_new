@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.ocbc.hk.apps.cqss</groupId>
+        <artifactId>cqss-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>CqssIntranetWeb</artifactId>
+    <packaging>war</packaging>
+    <name>CQSS Intranet Web</name>
+    <description>CQSS Intranet Web Application</description>
+
+    <dependencies>
+        <!-- Internal dependencies -->
+        <dependency>
+            <groupId>com.ocbc.hk.apps.cqss</groupId>
+            <artifactId>CqssCommon</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ocbc.hk.apps.cqss</groupId>
+            <artifactId>CqssVo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ocbc.hk.apps.cqss</groupId>
+            <artifactId>CqssIntraEjb</artifactId>
+            <type>ejb-client</type>
+        </dependency>
+        <dependency>
+            <groupId>com.ocbc.hk.apps.cqss</groupId>
+            <artifactId>CqssApplet</artifactId>
+        </dependency>
+
+        <!-- External dependencies identified from Ant build files -->
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>javax.servlet.jsp-api</artifactId>
+            <version>2.3.1</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <sourceDirectory>src</sourceDirectory>
+        <resources>
+            <resource>
+                <directory>src</directory>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>WebContent</directory>
+                <excludes>
+                    <exclude>WEB-INF/web.xml</exclude>
+                </excludes>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <debug>true</debug>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <warSourceDirectory>WebContent</warSourceDirectory>
+                    <webXml>WebContent/WEB-INF/web.xml</webXml>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <outputDirectory>${project.build.directory}/../../lib/ejb</outputDirectory>
+                    <warName>CqssIntranetWeb</warName>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

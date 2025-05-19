@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/application_6.xsd" version="6">
+  <application-name>CqssIntra</application-name>
+  <description>CQSS Intranet Enterprise Application Archive</description>
+  <display-name>CQSS Intranet Application</display-name>
+  <module>
+    <ejb>CqssIntraEjb.jar</ejb>
+  </module>
+  <module>
+    <web>
+      <web-uri>CqssIntranetWeb.war</web-uri>
+      <context-root>/cqss</context-root>
+    </web>
+  </module>
+  <library-directory>lib</library-directory>
+</application>

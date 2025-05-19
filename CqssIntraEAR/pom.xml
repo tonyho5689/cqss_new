@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.ocbc.hk.apps.cqss</groupId>
+        <artifactId>cqss-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>CqssIntraEAR</artifactId>
+    <packaging>ear</packaging>
+    <name>CQSS Intra EAR</name>
+    <description>CQSS Intranet Enterprise Application Archive</description>
+
+    <dependencies>
+        <!-- Internal dependencies -->
+        <dependency>
+            <groupId>com.ocbc.hk.apps.cqss</groupId>
+            <artifactId>CqssIntraEjb</artifactId>
+            <type>ejb</type>
+        </dependency>
+        <dependency>
+            <groupId>com.ocbc.hk.apps.cqss</groupId>
+            <artifactId>CqssIntranetWeb</artifactId>
+            <type>war</type>
+        </dependency>
+
+        <!-- External dependencies will be added as they are identified from the Ant build files -->
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-ear-plugin</artifactId>
+                <configuration>
+                    <version>6</version>
+                    <defaultLibBundleDir>lib</defaultLibBundleDir>
+                    <applicationName>CqssIntra</applicationName>
+                    <displayName>CQSS Intranet Application</displayName>
+                    <generateApplicationXml>true</generateApplicationXml>
+                    <modules>
+                        <ejbModule>
+                            <groupId>com.ocbc.hk.apps.cqss</groupId>
+                            <artifactId>CqssIntraEjb</artifactId>
+                            <bundleFileName>CqssIntraEjb.jar</bundleFileName>
+                        </ejbModule>
+                        <webModule>
+                            <groupId>com.ocbc.hk.apps.cqss</groupId>
+                            <artifactId>CqssIntranetWeb</artifactId>
+                            <contextRoot>/cqss</contextRoot>
+                            <bundleFileName>CqssIntranetWeb.war</bundleFileName>
+                        </webModule>
+                    </modules>
+                    <outputDirectory>${project.build.directory}/../../lib/ejb</outputDirectory>
+                    <finalName>CqssIntra</finalName>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/${project.build.finalName}/lib</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>false</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                            <includeTypes>jar</includeTypes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

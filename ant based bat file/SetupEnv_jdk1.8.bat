@@ -1,0 +1,27 @@
+@if GO%1==GOSKIP GOTO END_SETUP
+
+@set ANT_HOME=.\apache-ant-1.5.4
+
+:CHECK_DEFAULT_JDK
+@IF NOT EXIST "C:\Program Files\Java\jdk1.8.0_152" GOTO CHECK_BACKUP_JDK
+@SET JAVA_HOME=C:\Program Files\Java\jdk1.8.0_152
+@SET PATH=%JAVA_HOME%\bin;%PATH%
+@GOTO BUILD
+
+:CHECK_BACKUP_JDK
+@IF NOT EXIST "C:\Program Files (x86)\Java\jdk1.8.0_152" GOTO END_WITH_JDK_NOT_FOUND
+@SET JAVA_HOME=C:\Program Files (x86)\Java\jdk1.8.0_152
+@SET PATH=%JAVA_HOME%\bin;%PATH%
+@GOTO BUILD
+
+:BUILD
+@echo Java home set to "%JAVA_HOME%"
+@echo Ant home set to "%ANT_HOME%"
+@GOTO END_SETUP
+
+:END_WITH_JDK_NOT_FOUND
+@ECHO --- PLEASE CHECK ---
+@ECHO --- THE JDK PATH NOT FOUND ---
+@EXIT
+
+:END_SETUP

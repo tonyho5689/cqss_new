@@ -1,0 +1,40 @@
+<project name="Cqss" default="makeCqssAppletJar" basedir=".">
+    <property name="binary" location="./Binary"/>
+    <property name="source" location="./Source"/>
+    <property name="lib" location="../Deploy/lib"/>
+    <property name="appLib" location="${lib}/ejb"/>
+    
+    <target name="init">
+        <mkdir dir="${binary}"/>
+        <mkdir dir="${appLib}"/>
+    </target>
+    
+    <target name="compileAppletPrj" depends="init">
+        <delete dir="${binary}/CqssApplet/classes"/>
+        <mkdir dir="${binary}/CqssApplet/classes"/>
+        <copy todir="${binary}/CqssApplet/classes" includeEmptyDirs="false">
+            <fileset dir="${source}/CqssApplet/src">
+                <exclude name="**/*.java"/>
+                <exclude name="**/vsever.scc"/>
+                <exclude name="**/*.contrib"/>
+                <exclude name="**/*.keep"/>
+                <exclude name="**/*.mkelem"/>
+                <exclude name="**/*.checkout"/>
+                <exclude name="**/*.unloaded"/>
+            </fileset>
+        </copy>
+        
+        <javac srcdir="${source}/CqssApplet/src" destdir="${binary}/CqssApplet/classes" debug="on">
+            <classpath>
+                <pathelement location="${lib}/external/applet/jaws.jar"/>
+            </classpath>
+        </javac>
+    </target>
+    
+    <target name="makeCqssAppletJar" depends="compileAppletPrj">
+        <delete file="${appLib}/CqssApplet.jar"/>
+        <jar jarfile="${appLib}/CqssApplet.jar" basedir="${binary}/CqssApplet/classes" manifest="${binary}/CqssApplet/classes/META-INF/MANIFEST.MF">
+        </jar>
+        <delete dir="${binary}"/>
+    </target>
+</project>

@@ -1,0 +1,226 @@
+<project name="CqssEjb" default="makeAllJar" basedir=".">
+    <property name="binary" location="./Binary"/>
+    <property name="source" location="./Source"/>
+    <property name="lib" location="../Deploy/lib"/>
+    
+    <!-- for WAS9 -->
+    <property name="coreLib" location="${cbslibroot}/WnbCore/Core"/>
+    <property name="wasCoreLib" location="${cbslibroot}/WnbWas/WasCore"/>
+    <property name="scsLib" location="${cbslibroot}/WnbWas/Scs"/>
+    <property name="appLib" location="${lib}/ejb"/>
+    <property name="cyberUtilLib" location="../../../btss/btss/Deploy/lib"/>
+    
+    <target name="init">
+        <mkdir dir="${binary}"/>
+        <mkdir dir="${appLib}"/>
+    </target>
+    
+    <target name="compileCqssVo">
+        <delete dir="${binary}/CqssVo/classes"/>
+        <mkdir dir="${binary}/CqssVo/classes"/>
+        <copy todir="${binary}/CqssVo/classes" includeEmptyDirs="false">
+            <fileset dir="${source}/CqssVo/src">
+                <exclude name="**/*.java"/>
+                <exclude name="**/vsever.scc"/>
+                <exclude name="**/*.mf"/>
+                <exclude name="**/*.contrib"/>
+                <exclude name="**/*.keep"/>
+                <exclude name="**/*.mkelem"/>
+                <exclude name="**/*.checkout"/>
+                <exclude name="**/*.unloaded"/>
+            </fileset>
+        </copy>
+        <javac srcdir="${source}/CqssVo/src" destdir="${binary}/CqssVo/classes" debug="on">
+            <classpath>
+                <pathelement location="${lib}/external/apache/common/commons-beanutils.jar"/>
+                <pathelement location="${lib}/external/apache/common/commons-logging-1.1.1.jar"/>
+                <fileset dir="${washome}/plugins">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+        </javac>
+    </target>
+    
+    <target name="makeCqssVo" depends="compileCqssVo">
+        <delete file="${appLib}/CqssVo.jar"/>
+        <jar jarfile="${appLib}/CqssVo.jar" basedir="${binary}/CqssVo/classes">
+        </jar>
+    </target>
+    
+    <target name="compileCqssDB">
+        <delete dir="${binary}/CqssDB/classes"/>
+        <mkdir dir="${binary}/CqssDB/classes"/>
+        <copy todir="${binary}/CqssDB/classes" includeEmptyDirs="false">
+            <fileset dir="${source}/CqssDB/src">
+                <exclude name="**/*.java"/>
+                <exclude name="**/vsever.scc"/>
+                <exclude name="**/*.mf"/>
+                <exclude name="**/*.contrib"/>
+                <exclude name="**/*.keep"/>
+                <exclude name="**/*.mkelem"/>
+                <exclude name="**/*.checkout"/>
+                <exclude name="**/*.unloaded"/>
+            </fileset>
+        </copy>
+        <javac srcdir="${source}/CqssDB/src" destdir="${binary}/CqssDB/classes" debug="on">
+            <classpath>
+                <pathelement location="${lib}/external/spring/spring.jar"/>
+                <pathelement location="${lib}/external/ibatis/ibatis-2.3.0.677_cv.jar"/>
+                <pathelement location="${appLib}/CqssVo.jar"/>
+                <fileset dir="${washome}/plugins">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+        </javac>
+    </target>
+    
+    <target name="makeCqssDB" depends="compileCqssDB">
+        <delete file="${appLib}/CqssDB.jar"/>
+        <jar jarfile="${appLib}/CqssDB.jar" basedir="${binary}/CqssDB/classes">
+        </jar>
+    </target>
+    
+    <target name="compileCqssEjbUtil">
+        <delete dir="${binary}/CqssEjbUtil/classes"/>
+        <mkdir dir="${binary}/CqssEjbUtil/classes"/>
+        <copy todir="${binary}/CqssEjbUtil/classes" includeEmptyDirs="false">
+            <fileset dir="${source}/CqssEjbUtil/src">
+                <exclude name="**/*.java"/>
+                <exclude name="**/vsever.scc"/>
+                <exclude name="**/*.mf"/>
+                <exclude name="**/*.contrib"/>
+                <exclude name="**/*.keep"/>
+                <exclude name="**/*.mkelem"/>
+                <exclude name="**/*.checkout"/>
+                <exclude name="**/*.unloaded"/>
+            </fileset>
+        </copy>
+        <javac srcdir="${source}/CqssEjbUtil/src" destdir="${binary}/CqssEjbUtil/classes" debug="on">
+            <classpath>
+                <pathelement location="${lib}/external/apache/common/commons-digester-1.8.jar"/>
+                <pathelement location="${lib}/external/apache/common/commons-beanutils.jar"/>
+                <pathelement location="${lib}/external/apache/common/commons-logging-1.1.1.jar"/>
+                <pathelement location="${lib}/external/apache/common/commons-logging-adapters-1.1.1.jar"/>
+                <pathelement location="${lib}/external/apache/common/commons-logging-api-1.1.1.jar"/>
+                <pathelement location="${lib}/external/apache/common/commons-lang-2.4.jar"/>
+                <pathelement location="${lib}/external/apache/common/commons-collections-3.2.1.jar"/>
+                <pathelement location="${lib}/external/apache/common/commons-chain-1.2.jar"/>
+                <pathelement location="${lib}/external/apache/common/commons-configuration-1.5.zip"/>
+                <pathelement location="${lib}/external/apache/common/commons-codec-1.3.jar"/>
+                <pathelement location="${lib}/external/apache/common/commons-validator-1.3.1.jar"/>
+                <pathelement location="${lib}/external/apache/logging/log4j.jar"/>
+                <pathelement location="${coreLib}/AppCore.jar"/>
+                <pathelement location="${coreLib}/AppMsg.jar"/>
+                <pathelement location="${wasCoreLib}/WnbLog.jar"/>
+                <pathelement location="${wasCoreLib}/EjbCommon.jar"/>
+                <pathelement location="${scsLib}/EjbIntraCommonScs.jar"/>
+                <pathelement location="${lib}/external/spring/spring-2.5.5.jar"/>
+                <pathelement location="${lib}/external/spring/aspectj/aspectjrt.jar"/>
+                <pathelement location="${lib}/external/spring/aspectj/aspectjweaver.jar"/>
+                <pathelement location="${lib}/external/spring/antlr/antlr-2.7.6.jar"/>
+                <pathelement location="${lib}/external/ibatis/ibatis-2.3.0.677_cy.jar"/>
+                <pathelement location="${cyberUtilLib}/CyberUtilCommonForWas.jar"/>
+                <pathelement location="${cyberUtilLib}/CyberUtilToolsForWas.jar"/>
+                <pathelement location="${cyberUtilLib}/CyberUtilForWas.jar"/>
+                <pathelement location="${appLib}/CqssCommon.jar"/>
+                <fileset dir="${washome}/plugins">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+        </javac>
+    </target>
+    
+    <target name="makeCqssEjbUtil" depends="compileCqssEjbUtil">
+        <delete file="${appLib}/CqssEjbUtil.jar"/>
+        <jar jarfile="${appLib}/CqssEjbUtil.jar" basedir="${binary}/CqssEjbUtil/classes">
+        </jar>
+    </target>
+    
+    <target name="compileCqssIntraEjb">
+        <delete dir="${binary}/CqssIntraEjb/classes"/>
+        <mkdir dir="${binary}/CqssIntraEjb/classes"/>
+        <copy todir="${binary}/CqssIntraEjb/classes" includeEmptyDirs="false">
+            <fileset dir="${source}/CqssIntraEjb/ejbModule">
+                <exclude name="**/*.java"/>
+                <exclude name="**/vsever.scc"/>
+                <exclude name="**/*.mf"/>
+                <exclude name="**/*.contrib"/>
+                <exclude name="**/*.keep"/>
+                <exclude name="**/*.mkelem"/>
+                <exclude name="**/*.checkout"/>
+                <exclude name="**/*.unloaded"/>
+            </fileset>
+        </copy>
+        <javac srcdir="${source}/CqssIntraEjb/ejbModule" destdir="${binary}/CqssIntraEjb/classes" debug="on">
+            <classpath>
+                <pathelement location="${lib}/external/apache/common/commons-chain-1.2.jar"/>
+                <pathelement location="${lib}/external/apache/common/commons-logging-1.1.1.jar"/>
+                <pathelement location="${lib}/external/apache/common/commons-configuration-1.5.zip"/>
+                <pathelement location="${lib}/external/apache/common/commons-lang-2.4.jar"/>
+                <pathelement location="${lib}/external/apache/common/commons-collections-3.2.1.jar"/>
+                <pathelement location="${lib}/external/apache/common/commons-validator-1.3.1.jar"/>
+                <pathelement location="${lib}/external/spring/spring-2.5.5.jar"/>
+                <pathelement location="${lib}/external/spring/aspectj/aspectjrt.jar"/>
+                <pathelement location="${lib}/external/spring/aspectj/aspectjweaver.jar"/>
+                <pathelement location="${lib}/external/spring/antlr/antlr-2.7.6.jar"/>
+                <pathelement location="${lib}/external/hsm/HsmCommon.jar"/>
+                <pathelement location="${cyberUtilLib}/CyberUtilCommonForWas.jar"/>
+                <pathelement location="${cyberUtilLib}/CyberUtilToolsForWas.jar"/>
+                <pathelement location="${cyberUtilLib}/CyberUtilForWas.jar"/>
+                <pathelement location="${coreLib}/AppCore.jar"/>
+                <pathelement location="${coreLib}/AppMsg.jar"/>
+                <pathelement location="${coreLib}/AppUtil.jar"/>
+                <pathelement location="${wasCoreLib}/EjbCommon.jar"/>
+                <pathelement location="${scsLib}/EjbIntraCommonScs.jar"/>
+                <pathelement location="${appLib}/CqssEjbUtil.jar"/>
+                <pathelement location="${appLib}/CqssVo.jar"/>
+                <pathelement location="${appLib}/CqssDB.jar"/>
+                <pathelement location="${appLib}/CqssCommon.jar"/>
+                <fileset dir="${washome}/lib">
+                    <include name="**/*.jar"/>
+                </fileset>
+                <fileset dir="${washome}/java/8.0/jre/lib">
+                    <include name="**/*.jar"/>
+                </fileset>
+                <fileset dir="${washome}/plugins">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+        </javac>
+    </target>
+    
+    <target name="makeCqssIntraEjb" depends="compileCqssIntraEjb">
+        <delete file="${appLib}/CqssIntraEjb.jar"/>
+        <jar jarfile="${appLib}/CqssIntraEjb_temp.jar" basedir="${binary}/CqssIntraEjb/classes">
+            <fileset dir="${binary}/CqssIntraEjb/classes">
+                <include name="**/*"/>
+                <exclude name="**/*.class"/>
+                <exclude name="**/EJB*.class"/>
+            </fileset>
+            <manifest>
+                <attribute name="Built-By" value="${user.name}"/>
+                <attribute name="Class-Path" value="CqssEjbUtil.jar CqssVo.jar CqssDB.jar CqssCommon.jar AppCore.jar AppMsg.jar AppUtil.jar EjbCommon.jar EjbIntraCommonScs.jar HsmCommon.jar log4j-1.2.14.jar slf4j-api-1.6.1.jar CyberUtilCommonForWas.jar CyberUtilToolsForWas.jar CyberUtilForWas.jar commons-configuration-1.5.jar commons-logging-adapters-1.1.1.jar commons-collections-3.2.1.jar commons-logging-1.1.1.jar commons-beanutils.jar commons-digester-1.8.jar commons-httpclient-3.1.jar commons-validator-1.3.1.jar commons-chain-1.2.jar commons-logging-api-1.1.1.jar commons-codec-1.3.jar spring-2.5.5.jar antlr-2.7.6.jar aspectjrt.jar aspectjweaver.jar ibatis-2.3.0.677_cv.jar"/>
+            </manifest>
+        </jar>
+        <exec dir="${appLib}" executable="${washome}/bin/ejbdeploy.bat">
+            <arg line="CqssIntraEjb_temp.jar temp CqssIntraEjb.jar -cp &quot;${appLib}/CqssEjbUtil.jar;${wasCoreLib}/EjbCommon.jar;${coreLib}/AppMsg.jar;${coreLib}/AppCore.jar&quot; -ignoreErrors"/>
+        </exec>
+        <delete dir="${appLib}/temp"/>
+        <delete file="${appLib}/CqssIntraEjb_temp.jar"/>
+        <unjar src="${appLib}/CqssIntraEjb.jar" dest="${binary}/CqssIntraEjbStub/classes">
+            <patternset>
+                <include name="**/*.class"/>
+                <include name="**/EJB*.class"/>
+            </patternset>
+        </unjar>
+        <delete file="${appLib}/CqssIntraEjbStub.jar"/>
+        <jar jarfile="${appLib}/CqssIntraEjbStub.jar">
+            <fileset dir="${binary}/CqssIntraEjbStub/classes">
+                <include name="**/*"/>
+            </fileset>
+        </jar>
+        <delete dir="${binary}"/>
+    </target>
+    
+    <target name="makeAllJar" depends="makeCqssEjbUtil, makeCqssVo, makeCqssDB, makeCqssIntraEjb"/>
+</project>

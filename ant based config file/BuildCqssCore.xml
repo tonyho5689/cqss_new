@@ -1,0 +1,86 @@
+<project name="CqssCore" default="makeAllJar" basedir=".">
+    <property name="source" location="./Source"/>
+    <property name="binary" location="./Binary"/>
+    <property name="chsOtherLib" location="${libroot}/other"/>
+    <property name="wasCoreLib" location="${libroot}/WnbWas/WasCore"/>
+    <property name="otherLib" location="../Deploy/Libraries/other"/>
+    <property name="coreLib" location="${libroot}/WnbCore/Core"/>
+    <property name="lib" location="../Deploy/lib"/>
+    <property name="appLib" location="${lib}/ejb"/>
+    <property name="cyberUtilLib" location="../../../btss/btss/Deploy/lib"/>
+
+    <target name="init">
+        <mkdir dir="${appLib}"/>
+    </target>
+
+    <target name="compileCqssStartup">
+        <delete dir="${binary}/CqssStartup/classes"/>
+        <mkdir dir="${binary}/CqssStartup/classes"/>
+        <copy todir="${binary}/CqssStartup/classes" includeEmptyDirs="false">
+            <fileset dir="${source}/CqssStartup/src">
+                <exclude name="**/*.java"/>
+                <exclude name="**/vsever.scc"/>
+                <exclude name="**/*.mf"/>
+                <exclude name="**/*.contrib"/>
+                <exclude name="**/*.keep"/>
+                <exclude name="**/*.mkelem"/>
+                <exclude name="**/*.checkout"/>
+                <exclude name="**/*.unloaded"/>
+            </fileset>
+        </copy>
+        <javac srcdir="${source}/CqssStartup/src" destdir="${binary}/CqssStartup/classes" debug="on">
+            <classpath>
+                <pathelement location="${chsOtherLib}/log4j-1.2.14.jar"/>
+                <pathelement location="${wasCoreLib}/Startup.jar"/>
+                <pathelement location="${wasCoreLib}/WnbLog.jar"/>
+                <fileset dir="${washome}/plugins">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="makeCqssStartup" depends="compileCqssStartup, init">
+        <delete file="${appLib}/CqssStartup.jar"/>
+        <jar jarfile="${appLib}/CqssStartup.jar" basedir="${binary}/CqssStartup/classes">
+        </jar>
+    </target>
+
+    <target name="compileCqssCommon">
+        <delete dir="${binary}/CqssCommon/classes"/>
+        <mkdir dir="${binary}/CqssCommon/classes"/>
+        <copy todir="${binary}/CqssCommon/classes" includeEmptyDirs="false">
+            <fileset dir="${source}/CqssCommon/src">
+                <exclude name="**/*.java"/>
+                <exclude name="**/vsever.scc"/>
+                <exclude name="**/*.mf"/>
+                <exclude name="**/*.contrib"/>
+                <exclude name="**/*.keep"/>
+                <exclude name="**/*.mkelem"/>
+                <exclude name="**/*.checkout"/>
+                <exclude name="**/*.unloaded"/>
+            </fileset>
+        </copy>
+        <javac srcdir="${source}/CqssCommon/src" destdir="${binary}/CqssCommon/classes" debug="on">
+            <classpath>
+                <pathelement location="${lib}/external/apache/common/commons-logging-1.1.1.jar"/>
+                <pathelement location="${lib}/external/apache/logging/log4j.jar"/>
+                <pathelement location="${wasCoreLib}/EjbCommon.jar"/>
+                <pathelement location="${coreLib}/AppCore.jar"/>
+                <pathelement location="${coreLib}/AppMsg.jar"/>
+                <pathelement location="${cyberUtilLib}/CyberUtilCommonForWas.jar"/>
+                <fileset dir="${washome}/plugins">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="makeCqssCommon" depends="compileCqssCommon">
+        <delete file="${appLib}/CqssCommon.jar"/>
+        <jar jarfile="${appLib}/CqssCommon.jar" basedir="${binary}/CqssCommon/classes">
+        </jar>
+    </target>
+
+    <target name="makeAllJar" depends="makeCqssStartup, makeCqssCommon"/>
+</project>

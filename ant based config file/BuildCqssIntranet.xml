@@ -1,0 +1,186 @@
+<project name="Cqss" default="makeApp" basedir=".">
+    <property name="binary" location="./Binary"/>
+    <property name="source" location="./Source"/>
+    <property name="lib" location="../Deploy/lib"/>
+    
+    <!-- for WAS9 -->
+    <property name="coreLib" location="${cbslibroot}/WnbCore/Core"/>
+    <property name="wasCoreLib" location="${cbslibroot}/WnbWas/WasCore"/>
+    <property name="appLib" location="${lib}/ejb"/>
+    <property name="appPackage" location="../Deploy/EJB/Packages"/>
+    <property name="scsLib" location="${cbslibroot}/WnbWas/Scs"/>
+    <property name="cyberUtilLib" location="../../../btss/btss/Deploy/lib"/>
+    
+    <target name="init">
+        <mkdir dir="${binary}"/>
+        <mkdir dir="${appLib}"/>
+        <mkdir dir="${appPackage}"/>
+    </target>
+    
+    <target name="compileCqssIntranetWeb">
+        <delete dir="${binary}/CqssIntranetWeb/WebContent/Web-inf/classes"/>
+        <mkdir dir="${binary}/CqssIntranetWeb/WebContent/Web-inf/classes"/>
+        <copy todir="${binary}/CqssIntranetWeb/WebContent/Web-inf/classes" includeEmptyDirs="false">
+            <fileset dir="${source}/CqssIntranetWeb/src">
+                <exclude name="**/*.java"/>
+                <exclude name="**/vsever.scc"/>
+                <exclude name="**/*.mf"/>
+                <exclude name="**/*.contrib"/>
+                <exclude name="**/*.keep"/>
+                <exclude name="**/*.mkelem"/>
+                <exclude name="**/*.checkout"/>
+                <exclude name="**/*.unloaded"/>
+            </fileset>
+        </copy>
+        <javac srcdir="${source}/CqssIntranetWeb/src" destdir="${binary}/CqssIntranetWeb/WebContent/Web-inf/classes" debug="on">
+            <classpath>
+                <pathelement location="${coreLib}/AppCore.jar"/>
+                <pathelement location="${coreLib}/AppMsg.jar"/>
+                <pathelement location="${coreLib}/AppUtil.jar"/>
+                <pathelement location="${wasCoreLib}/EjbCommon.jar"/>
+                <pathelement location="${wasCoreLib}/EjbIntraWebCommon.jar"/>
+                <pathelement location="${wasCoreLib}/EjbWebCommon.jar"/>
+                <pathelement location="${appLib}/CqssCommon.jar"/>
+                <pathelement location="${cyberUtilLib}/CyberUtilCommonForWas.jar"/>
+                <pathelement location="${lib}/external/struts/struts.jar"/>
+                <fileset dir="${washome}/lib">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+        </javac>
+    </target>
+    
+    <target name="makeCqssIntranetWeb" depends="compileCqssIntranetWeb">
+        <delete file="${appLib}/CqssIntranetWeb.jar"/>
+        <jar jarfile="${appLib}/CqssIntranetWeb.jar" basedir="${binary}/CqssIntranetWeb/WebContent/Web-inf/classes">
+            <manifest>
+                <attribute name="Built-By" value="${user.name}"/>
+                <attribute name="Class-Path" value="CqssCommon.jar AppCore.jar AppMsg.jar AppUtil.jar EjbCommon.jar EjbIntraWebCommon.jar EjbWebCommon.jar CyberUtilCommonForWas.jar struts.jar commons-beanutils.jar commons-digester.jar commons-fileupload.jar commons-logging.jar commons-validator.jar jakarta-oro.jar"/>
+            </manifest>
+        </jar>
+    </target>
+    
+    <target name="makeWar" depends="makeCqssIntranetWeb">
+        <copy file="${appLib}/CqssApplet.jar" tofile="${binary}/CqssIntranetWeb/WebContent/applets/CqssApplet.jar" preservelastmodified="true"/>
+        <delete file="${appPackage}/CqssIntranetWeb.war"/>
+        <war destfile="${appPackage}/CqssIntranetWeb.war" webxml="${source}/CqssIntranetWeb/WebContent/Web-inf/web.xml">
+            <manifest>
+                <attribute name="Built-By" value="${user.name}"/>
+                <attribute name="Class-Path" value=""/>
+            </manifest>
+            <fileset dir="${source}/CqssIntranetWeb/WebContent">
+                <exclude name="**/vsever.scc"/>
+                <exclude name="**/*.class"/>
+                <exclude name="**/*.properties"/>
+                <exclude name="**/web.xml"/>
+                <exclude name="**/*.mf"/>
+                <exclude name="**/*.jar"/>
+                <exclude name="**/*.contrib"/>
+                <exclude name="**/*.keep"/>
+                <exclude name="**/*.mkelem"/>
+                <exclude name="**/*.checkout"/>
+                <exclude name="**/*.unloaded"/>
+            </fileset>
+            <fileset dir="${binary}/CqssIntranetWeb/WebContent">
+                <include name="**/CqssApplet.jar"/>
+            </fileset>
+            <lib dir="${lib}/external/struts">
+                <include name="struts.jar"/>
+                <include name="jakarta-oro.jar"/>
+                <include name="commons-fileupload.jar"/>
+            </lib>
+            <lib dir="${lib}/external/apache/common">
+                <include name="commons-beanutils.jar"/>
+                <include name="commons-digester-1.8.jar"/>
+                <include name="commons-logging-1.1.1.jar"/>
+                <include name="commons-validator-1.3.1.jar"/>
+            </lib>
+            <lib dir="${appLib}">
+                <include name="CqssIntranetWeb.jar"/>
+            </lib>
+            <lib dir="${appLib}">
+                <include name="CqssCommon.jar"/>
+            </lib>
+            <lib dir="${wasCoreLib}">
+                <include name="EjbCommon.jar"/>
+                <include name="EjbIntraWebCommon.jar"/>
+                <include name="EjbWebCommon.jar"/>
+            </lib>
+        </war>
+    </target>
+    
+    <target name="makeIntraEar" depends="init, makeWar">
+        <delete file="${appPackage}/CqssIntra.ear"/>
+        <ear destfile="${appPackage}/CqssIntra.ear" appxml="${source}/CqssIntraEAR/meta-inf/application.xml">
+            <manifest>
+                <attribute name="Built-By" value="${user.name}"/>
+                <attribute name="Class-Path" value=""/>
+            </manifest>
+            <fileset dir="${appPackage}">
+                <include name="CqssIntranetWeb.war"/>
+            </fileset>
+            <fileset dir="${coreLib}">
+                <include name="AppCore.jar"/>
+                <include name="AppMsg.jar"/>
+                <include name="AppUtil.jar"/>
+            </fileset>
+            <fileset dir="${appLib}">
+                <include name="CqssIntraEjbStub.jar"/>
+                <include name="CqssEjb.jar"/>
+                <include name="CqssEjbUtil.jar"/>
+                <include name="CqssEjbVo.jar"/>
+                <include name="CqssEjbDB.jar"/>
+                <include name="CqssCommon.jar"/>
+            </fileset>
+            <fileset dir="${cyberUtilLib}">
+                <include name="CyberUtilCommonForWas.jar"/>
+                <include name="CyberUtilToolsForWas.jar"/>
+                <include name="CyberUtilForWas.jar"/>
+            </fileset>
+            <fileset dir="${wasCoreLib}">
+                <include name="EjbCommon.jar"/>
+                <include name="WnbLog.jar"/>
+            </fileset>
+            <fileset dir="${scsLib}">
+                <include name="EjbIntraCommonScs.jar"/>
+            </fileset>
+            <fileset dir="${lib}/external/apache/common">
+                <include name="commons-logging-1.1.1.jar"/>
+                <include name="commons-configuration-1.5.zip"/>
+                <include name="commons-lang-2.4.jar"/>
+                <include name="commons-collections-3.2.1.jar"/>
+                <include name="commons-validator-1.3.1.jar"/>
+                <include name="commons-httpclient-3.1.jar"/>
+                <include name="commons-chain-1.2.jar"/>
+                <include name="commons-codec-1.3.jar"/>
+                <include name="commons-logging-adapters-1.1.1.jar"/>
+                <include name="commons-logging-api-1.1.1.jar"/>
+                <include name="commons-digester-1.8.jar"/>
+                <include name="commons-beanutils.jar"/>
+            </fileset>
+            <fileset dir="${lib}/external/apache/logging">
+                <include name="log4j.jar"/>
+            </fileset>
+            <fileset dir="${lib}/external/spring">
+                <include name="spring-2.5.5.jar"/>
+            </fileset>
+            <fileset dir="${lib}/external/hsm">
+                <include name="HsmCommon.jar"/>
+            </fileset>
+            <fileset dir="${lib}/external/spring/aspectj">
+                <include name="aspectjrt.jar"/>
+                <include name="aspectjweaver.jar"/>
+            </fileset>
+            <fileset dir="${lib}/external/spring/antlr">
+                <include name="antlr-2.7.6.jar"/>
+            </fileset>
+            <fileset dir="${lib}/external/ibatis">
+                <include name="ibatis-2.3.0.677_cv.jar"/>
+            </fileset>
+        </ear>
+        <delete dir="${binary}"/>
+        <delete file="${appPackage}/CqssIntranetWeb.war"/>
+    </target>
+    
+    <target name="makeApp" depends="makeIntraEar"/>
+</project>

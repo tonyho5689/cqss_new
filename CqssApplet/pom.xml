@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.ocbc.hk.apps.cqss</groupId>
+        <artifactId>cqss-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>CqssApplet</artifactId>
+    <packaging>jar</packaging>
+    <name>CQSS Applet</name>
+    <description>CQSS Applet Module</description>
+
+    <dependencies>
+        <!-- Internal dependencies -->
+        <dependency>
+            <groupId>com.ocbc.hk.apps.cqss</groupId>
+            <artifactId>CqssCommon</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ocbc.hk.apps.cqss</groupId>
+            <artifactId>CqssVo</artifactId>
+        </dependency>
+
+        <!-- External dependencies identified from Ant build files -->
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <sourceDirectory>src</sourceDirectory>
+        <resources>
+            <resource>
+                <directory>src</directory>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                    <exclude>**/vsever.scc</exclude>
+                    <exclude>**/*.mf</exclude>
+                    <exclude>**/*.contrib</exclude>
+                    <exclude>**/*.keep</exclude>
+                    <exclude>**/*.mkelem</exclude>
+                    <exclude>**/*.checkout</exclude>
+                    <exclude>**/*.unloaded</exclude>
+                </excludes>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <debug>true</debug>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                        </manifest>
+                    </archive>
+                    <outputDirectory>${project.build.directory}/../../lib/ejb</outputDirectory>
+                </configuration>
+            </plugin>
+            <!-- Plugin for signing the JAR file - Commented out for now -->
+            <!--
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jarsigner-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>sign</id>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                        <phase>package</phase>
+                        <configuration>
+                            <keystore>${keystore}</keystore>
+                            <alias>${alias}</alias>
+                            <storepass>${storepass}</storepass>
+                            <keypass>${keypass}</keypass>
+                            <arguments>
+                                <argument>-tsa</argument>
+                                <argument>http://timestamp.digicert.com</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            -->
+        </plugins>
+    </build>
+</project>
